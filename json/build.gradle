@@ -1,0 +1,109 @@
+/**
+ * build.gradle
+ * Top-level build file for the Samples Project
+ */
+// Plugins
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+// Force Java 8
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+// Look for a local gradle setup file, and include it
+if( file('local.gradle').exists() ){
+	apply from: 'local.gradle'
+}
+
+// Repositories
+repositories {
+	mavenLocal()
+    mavenCentral()
+}
+
+// Project dependencies
+dependencies {
+	// Log4J (non-transitive)
+	compile(group: 'log4j', name: 'log4j', version: '1.2.15') {transitive = false}
+
+	// Servlet API v2.5 (non-transitive)
+	compile(group: 'javax.servlet', name: 'servlet-api', version: '2.5') {transitive = false}
+
+	// Apache Commons Logging
+	compile(group: 'commons-logging', name: 'commons-logging', version: '1+') {transitive = false}
+
+	// AWS Java SDK (latest)
+	compile(group: 'com.amazonaws', name: 'aws-java-sdk', version: '+')
+//	compile(group: 'com.amazonaws', name: 'aws-java-sdk-core', version: '+') {transitive = false}
+//	compile(group: 'com.amazonaws', name: 'aws-java-sdk-sqs', version: '+') {transitive = false}
+//	compile(group: 'com.amazonaws', name: 'aws-java-sdk-sns', version: '+') {transitive = false}
+
+	// JSON Support via GSON by Google
+	compile(group: 'com.google.code.gson', name: 'gson', version: '+')
+}
+
+// Build options/setup for this project
+project.ext {
+	description = 'PTS AWS SESNotifier Project'
+	version = '0.01'
+	status = 'alpha'
+}
+
+/*
+ * Beanstalk Configuration
+ */
+beanstalk {
+	profile = 'pts-west'
+	s3Endpoint = 's3-us-west-2.amazonaws.com'
+	beanstalkEndpoint = 'elasticbeanstalk.us-west-2.amazonaws.com'
+
+	deployments {
+		playground {
+			application = 'Playground'
+			environment = 'pts-playground'
+			war = tasks.war
+		}
+		playgroundWorker {
+			application = 'Playground'
+			environment = 'playground-worker'
+			war = tasks.war
+		}
+	}
+}
+
+/*
+ * Task configuration
+ */
+clean {
+	delete 'build'
+	delete 'dist'
+}
+
+war {
+    baseName = "pts-aws_sesnotifier-${project.ext.version}"
+	destinationDir = file('dist')
+}
+
+jar {
+	baseName = "pts-aws_sesnotifier-${project.ext.version}"
+	destinationDir = file('dist')
+}
+
+javadoc {
+	source = sourceSets.main.allJava
+	destinationDir = file('dist/javadoc')
+}
+
+task javadocJar (type: Jar, dependsOn: javadoc) {
+	baseName = "pts-aws_sesnotifier-${project.ext.version}"
+	destinationDir = file('dist')
+	classifier = 'javadoc'
+}
+
+tasks.build.dependsOn( [ ':war', ':jar', ':javadocJar' ] )
+
+// By default, build our JAR and Javadoc JAR
+defaultTasks ':war', ':jar', ':javadocJar'
+
+// END: build.gradle

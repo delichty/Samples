@@ -1,2 +1,3 @@
 # Samples
-Misc samples
+
+This repository contains miscellaneous samples.

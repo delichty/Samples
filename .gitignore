@@ -1,0 +1,29 @@
+# .gitignore
+# See https://help.github.com/articles/ignoring-files/
+
+# Ignore any log files
+*.log
+
+# Ignore embeded Git Repos
+wiki/
+
+# Ignore any local gradle build files
+local.gradle
+
+# Ignore any eclipse files
+.project
+.classpath
+.settings
+.groovy
+.externalToolBuilders
+
+# Ignore Gradle cache
+.gradle
+
+# Ignore Gradle build paths
+bin/
+build/
+dist/
+
+#
+# End .gitignore
