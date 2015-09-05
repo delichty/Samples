@@ -15,7 +15,7 @@ gradle publish
 
 ```bash
 cd ~/git/Samples/json/Jackson
-gradles
+gradle
 ```
 
 ## Running
