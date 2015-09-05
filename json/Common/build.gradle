@@ -1,0 +1,88 @@
+/**
+ * build.gradle
+ * Build file for the JSON/Common Project
+ */
+// Plugins
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+// Force Java 8
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+// Look for a local gradle setup file, and include it
+if( file('local.gradle').exists() ){
+	apply from: 'local.gradle'
+}
+
+// Build options/setup for this project
+project.ext {
+	description = 'JSON/Common Project'
+	version = '0.01'
+	status = 'alpha'
+}
+
+// Repositories
+repositories {
+	mavenLocal()
+    mavenCentral()
+}
+
+// Local publishing
+publishing {
+   repositories {
+       mavenLocal()
+   }
+   publications {
+       impl(MavenPublication) {
+           groupId 'net.ourpts.json'
+           artifactId 'Common'
+           version "${project.ext.version}"
+
+           artifact JsonCommonJar
+       }
+   }
+}
+
+// Project dependencies
+dependencies {
+	// None
+}
+
+/*
+ * Task configuration
+ */
+clean {
+	delete 'build'
+	delete 'dist'
+}
+
+task JsonCommonJar (type: Jar, dependsOn: classes) {
+	from sourceSets.main.output
+	include 'net/ourpts/json/'
+	baseName = "ourpts-json_common-${project.ext.version}"
+	destinationDir = file('dist')
+}
+artifacts {
+	archives JsonCommonJar
+}
+
+javadoc {
+	source = sourceSets.main.allJava
+	destinationDir = file('dist/javadoc')
+}
+
+task javadocJar (type: Jar, dependsOn: javadoc) {
+	from javadoc.destinationDir
+	baseName = "ourpts-json_common-${project.ext.version}"
+	destinationDir = file('dist')
+	classifier = 'javadoc'
+}
+
+tasks.build.dependsOn( [ 'JsonCommonJar', 'javadocJar' ] )
+
+// By default, build our JAR and Javadoc JAR
+defaultTasks 'JsonCommonJar', 'javadocJar'
+
+// END: build.gradle

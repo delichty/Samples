@@ -1,0 +1,1 @@
+Main-Class: net.ourpts.json.gson.GsonSample

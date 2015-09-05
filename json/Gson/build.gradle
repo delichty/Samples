@@ -1,0 +1,95 @@
+/**
+ * build.gradle
+ * Build file for the JSON/GSON Samples Project
+ */
+// Plugins
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+// Force Java 8
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+// Look for a local gradle setup file, and include it
+if( file('local.gradle').exists() ){
+	apply from: 'local.gradle'
+}
+
+// Build options/setup for this project
+project.ext {
+	description = 'JSON/GSON Samples Project'
+	version = '0.01'
+	status = 'alpha'
+}
+
+// Repositories
+repositories {
+	mavenLocal()
+    mavenCentral()
+}
+
+// Local publishing
+publishing {
+   repositories {
+       mavenLocal()
+   }
+   publications {
+       impl(MavenPublication) {
+           groupId 'net.ourpts.json'
+           artifactId 'Gson'
+           version "${project.ext.version}"
+
+           artifact JsonGsonJar
+       }
+   }
+}
+
+// Project dependencies
+dependencies {
+	// JSON Support via GSON by Google
+	compile(group: 'com.google.code.gson', name: 'gson', version: '+')
+
+	// Our JSON/Common code
+	compile(group: 'net.ourpts.json', name: 'Common', version: '+' )
+}
+
+/*
+ * Task configuration
+ */
+clean {
+	delete 'build'
+	delete 'dist'
+}
+
+task JsonGsonJar (type: Jar, dependsOn: classes) {
+	from sourceSets.main.output
+	include 'net/ourpts/json/gson/'
+	baseName = "ourpts-json_gson-${project.ext.version}"
+	destinationDir = file('dist')
+	manifest {
+		attributes('Main-Class':'net.ourpts.json.gson.GsonSample')
+	}
+}
+artifacts {
+	archives JsonGsonJar
+}
+
+javadoc {
+	source = sourceSets.main.allJava
+	destinationDir = file('dist/javadoc')
+}
+
+task javadocJar (type: Jar, dependsOn: javadoc) {
+	from javadoc.destinationDir
+	baseName = "ourpts-json_gson-${project.ext.version}"
+	destinationDir = file('dist')
+	classifier = 'javadoc'
+}
+
+tasks.build.dependsOn( [ 'JsonGsonJar', 'javadocJar' ] )
+
+// By default, build our JAR and Javadoc JAR
+defaultTasks 'JsonGsonJar', 'javadocJar'
+
+// END: build.gradle
