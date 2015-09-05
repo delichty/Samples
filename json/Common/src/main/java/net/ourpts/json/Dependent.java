@@ -29,8 +29,8 @@ public class Dependent {
     }
 
     // Getters
-    protected String getName(){ return name; }
-    protected int getAge(){ return age; }
-    protected String getRelation(){ return relation; }
+    public String getName(){ return name; }
+    public int getAge(){ return age; }
+    public String getRelation(){ return relation; }
 }
 // End: Dependent.java

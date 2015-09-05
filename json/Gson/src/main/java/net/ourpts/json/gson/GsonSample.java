@@ -33,7 +33,7 @@ public class GsonSample {
                 System.out.print( " " + a1 );
             }
             System.out.println();
-            System.out.println( "Person.dependents: ");
+            System.out.println( "Person.dependents (raw): ");
             for( JsonObject d1 : p1.getDependents() ){
                 System.out.println( "\t" + d1.toString() );
             }
@@ -49,9 +49,20 @@ public class GsonSample {
                 System.out.print( " " + a2 );
             }
             System.out.println();
-            System.out.println( "Person.dependents: " );
+            System.out.println( "Person.dependents (raw): " );
             for( JsonObject d2 : p2.getDependents() ){
                 System.out.println( "\t" + d2.toString() );
+            }
+            System.out.println();
+
+            // Real Dependents
+            System.out.println( "Person.dependents (objects): " );
+            for( JsonObject o1 : p2.getDependents() ){
+                Dependent d3 = gson.fromJson( o1.toString(), Dependent.class );
+                System.out.println( "\tDependent" );
+                System.out.println( "\t\tname: " + d3.getName() );
+                System.out.println( "\t\tage: " + d3.getAge() );
+                System.out.println( "\t\trelation: " + d3.getRelation() );
             }
             System.out.println();
 
