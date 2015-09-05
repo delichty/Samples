@@ -1,6 +1,6 @@
 /**
  * build.gradle
- * Top-level build file for the Samples Project
+ * Build file for the JSON/Jackson Samples Project
  */
 // Plugins
 apply plugin: 'java'
@@ -16,60 +16,44 @@ if( file('local.gradle').exists() ){
 	apply from: 'local.gradle'
 }
 
+// Build options/setup for this project
+project.ext {
+	description = 'JSON/Jackson Samples Project'
+	version = '0.01'
+	status = 'alpha'
+}
+
 // Repositories
 repositories {
 	mavenLocal()
     mavenCentral()
 }
 
+// Local publishing
+publishing {
+   repositories {
+       mavenLocal()
+   }
+   publications {
+       impl(MavenPublication) {
+           groupId 'net.ourpts.json'
+           artifactId 'Jackson'
+           version "${project.ext.version}"
+
+           artifact JsonJacksonJar
+       }
+   }
+}
+
 // Project dependencies
 dependencies {
-	// Log4J (non-transitive)
-	compile(group: 'log4j', name: 'log4j', version: '1.2.15') {transitive = false}
+	// Our JSON/Common code
+	compile(group: 'net.ourpts.json', name: 'Common', version: '+' )
 
-	// Servlet API v2.5 (non-transitive)
-	compile(group: 'javax.servlet', name: 'servlet-api', version: '2.5') {transitive = false}
-
-	// Apache Commons Logging
-	compile(group: 'commons-logging', name: 'commons-logging', version: '1+') {transitive = false}
-
-	// AWS Java SDK (latest)
-	compile(group: 'com.amazonaws', name: 'aws-java-sdk', version: '+')
-//	compile(group: 'com.amazonaws', name: 'aws-java-sdk-core', version: '+') {transitive = false}
-//	compile(group: 'com.amazonaws', name: 'aws-java-sdk-sqs', version: '+') {transitive = false}
-//	compile(group: 'com.amazonaws', name: 'aws-java-sdk-sns', version: '+') {transitive = false}
-
-	// JSON Support via GSON by Google
-	compile(group: 'com.google.code.gson', name: 'gson', version: '+')
-}
-
-// Build options/setup for this project
-project.ext {
-	description = 'PTS AWS SESNotifier Project'
-	version = '0.01'
-	status = 'alpha'
-}
-
-/*
- * Beanstalk Configuration
- */
-beanstalk {
-	profile = 'pts-west'
-	s3Endpoint = 's3-us-west-2.amazonaws.com'
-	beanstalkEndpoint = 'elasticbeanstalk.us-west-2.amazonaws.com'
-
-	deployments {
-		playground {
-			application = 'Playground'
-			environment = 'pts-playground'
-			war = tasks.war
-		}
-		playgroundWorker {
-			application = 'Playground'
-			environment = 'playground-worker'
-			war = tasks.war
-		}
-	}
+	// JSON Support via Jackson by FasterXML
+	compile(group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '+')
+	compile(group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '+')
+	compile(group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '+')
 }
 
 /*
@@ -80,14 +64,17 @@ clean {
 	delete 'dist'
 }
 
-war {
-    baseName = "pts-aws_sesnotifier-${project.ext.version}"
+task JsonJacksonJar (type: Jar, dependsOn: classes) {
+	from sourceSets.main.output
+	include 'net/ourpts/json/jackson/'
+	baseName = "ourpts-json_jackson-${project.ext.version}"
 	destinationDir = file('dist')
+	manifest{
+		attributes('Main-Class':'net.ourpts.json.jackson.JacksonSample')
+	}
 }
-
-jar {
-	baseName = "pts-aws_sesnotifier-${project.ext.version}"
-	destinationDir = file('dist')
+artifacts {
+	archives JsonJacksonJar
 }
 
 javadoc {
@@ -96,14 +83,15 @@ javadoc {
 }
 
 task javadocJar (type: Jar, dependsOn: javadoc) {
-	baseName = "pts-aws_sesnotifier-${project.ext.version}"
+	from javadoc.destinationDir
+	baseName = "ourpts-json_jackson-${project.ext.version}"
 	destinationDir = file('dist')
 	classifier = 'javadoc'
 }
 
-tasks.build.dependsOn( [ ':war', ':jar', ':javadocJar' ] )
+tasks.build.dependsOn( [ 'JsonJacksonJar', 'javadocJar' ] )
 
 // By default, build our JAR and Javadoc JAR
-defaultTasks ':war', ':jar', ':javadocJar'
+defaultTasks 'JsonJacksonJar', ':javadocJar'
 
 // END: build.gradle

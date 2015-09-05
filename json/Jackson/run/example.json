@@ -1,0 +1,8 @@
+{
+    "name": "Jon Doe",
+    "age": 23,
+    "aliases": [ "Jonny", "John" ],
+    "dependents": [{
+        "children": 1
+    }]
+}
