@@ -15,13 +15,13 @@ gradle publish
 
 ```bash
 cd ~/git/Samples/json/Gson
-gradle
+gradles
 ```
 
 ## Running
 
 ```bash
-cd ~/git/Samples/json/run
+cd ~/git/Samples/json/Gson/run
 CP=$(find libs -name '*.jar' -printf '%h/%f:')
 java -cp ${CP} net.ourpts.json.gson.GsonSample
 ```
