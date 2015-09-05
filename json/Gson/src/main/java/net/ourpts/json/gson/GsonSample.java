@@ -18,7 +18,7 @@ public class GsonSample {
         Gson gson = new Gson();
 
         try {
-            // Grab our JSON content
+            // Grab our JSON content into a String
             System.out.println( "Reading from: example.json" );
             String json = new String( Files.readAllBytes( Paths.get("example.json") ) );
             System.out.println( "JSON: " + json );
@@ -41,16 +41,16 @@ public class GsonSample {
 
             // From FileReader into Object
             System.out.println( "FileReader => Object");
-            Person o2 = gson.fromJson( new FileReader("example.json"), Person.class );
-            System.out.println( "Person.name: " + o2.getName() );
-            System.out.println( "Person.age: " + o2.getAge() );
+            Person p2 = gson.fromJson( new FileReader("example.json"), Person.class );
+            System.out.println( "Person.name: " + p2.getName() );
+            System.out.println( "Person.age: " + p2.getAge() );
             System.out.print( "Person.aliases:" );
-            for ( String a2 : o2.getAliases() ) {
+            for ( String a2 : p2.getAliases() ) {
                 System.out.print( " " + a2 );
             }
             System.out.println();
             System.out.println( "Person.dependents: " );
-            for( JsonObject d2 : p1.getDependents() ){
+            for( JsonObject d2 : p2.getDependents() ){
                 System.out.println( "\t" + d2.toString() );
             }
             System.out.println();
@@ -63,3 +63,4 @@ public class GsonSample {
 
     }
 }
+// End: GsonSample.java

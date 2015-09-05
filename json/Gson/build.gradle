@@ -47,11 +47,11 @@ publishing {
 
 // Project dependencies
 dependencies {
-	// JSON Support via GSON by Google
-	compile(group: 'com.google.code.gson', name: 'gson', version: '+')
-
 	// Our JSON/Common code
 	compile(group: 'net.ourpts.json', name: 'Common', version: '+' )
+
+	// JSON Support via GSON by Google
+	compile(group: 'com.google.code.gson', name: 'gson', version: '+')
 }
 
 /*
