@@ -1,8 +1,10 @@
+// Example JSON for Jackson
 {
-    "name": "Jon Doe",
-    "age": 23,
-    "aliases": [ "Jonny", "John" ],
-    "dependents": [
+    # Allows both Java/C and YAML style comments
+    "Name": "Jon Doe",
+    "Age": 23,
+    "Aliases": [ "Jonny", "John" ],
+    "Dependents": [
         {
             "name": "Jonny Doe",
             "age": 1,

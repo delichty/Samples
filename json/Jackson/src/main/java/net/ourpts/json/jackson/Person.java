@@ -2,8 +2,8 @@ package net.ourpts.json.jackson;
 
 import net.ourpts.json.Dependent;
 
-import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.annotation.*;
 
 /**
  * A simple Person class used to demonstrate JSON. This class only contains a no-arguments
@@ -19,14 +19,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  *
  * @see net.ourpts.json.Dependent
  */
+@JsonAutoDetect(fieldVisibility=JsonAutoDetect.Visibility.ANY)
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class Person {
-    @JsonProperty("name")
     private String name;
-
-    @JsonProperty("age")
     private int age;
-
-    @JsonProperty("aliases")
     private String[] aliases;
 
     @JsonProperty("dependents")

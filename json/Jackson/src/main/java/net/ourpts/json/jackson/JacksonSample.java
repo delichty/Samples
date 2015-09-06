@@ -10,11 +10,19 @@ import java.io.File;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.core.JsonParser;
 
 public class JacksonSample {
 
     public static void main( String[] args ){
         ObjectMapper mapper = new ObjectMapper();
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        //mapper.enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES);
+        mapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES);
+        mapper.enable(JsonParser.Feature.ALLOW_COMMENTS);
+        mapper.enable(JsonParser.Feature.ALLOW_YAML_COMMENTS);
 
         try {
             // Grab our JSON content into a String
@@ -58,7 +66,7 @@ public class JacksonSample {
             // Real Dependents
             System.out.println( "Person.dependents (objects): " );
             for( ObjectNode o1 : p2.getDependents() ){
-                Dependent d3 = mapper.readValue( o1.toString(), Dependent.class );
+                Dependent d3 = mapper.convertValue( o1, Dependent.class );
                 System.out.println( "\tDependent" );
                 System.out.println( "\t\tname: " + d3.getName() );
                 System.out.println( "\t\tage: " + d3.getAge() );
