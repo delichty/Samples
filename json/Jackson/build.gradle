@@ -92,6 +92,6 @@ task javadocJar (type: Jar, dependsOn: javadoc) {
 tasks.build.dependsOn( [ 'JsonJacksonJar', 'javadocJar' ] )
 
 // By default, build our JAR and Javadoc JAR
-defaultTasks 'JsonJacksonJar', ':javadocJar'
+defaultTasks 'JsonJacksonJar', 'javadocJar'
 
 // END: build.gradle
