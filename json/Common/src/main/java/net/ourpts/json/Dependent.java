@@ -15,6 +15,7 @@ package net.ourpts.json;
  * </ul>
  *
  * @see net.ourpts.json.gson.Person
+ * @see net.ourpts.json.jackson.Person
  */
 public class Dependent {
     private String name;
